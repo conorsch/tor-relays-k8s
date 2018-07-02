@@ -16,7 +16,13 @@ do
     cm="tor-relay-config-${n}"
 
     # Fetch external IP via API lookup.
-    external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
+    external_ip=""
+    while test -z "${external_ip}"
+    do
+        echo "Waiting for external IP for load balancer..."
+        sleep 5
+        external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
+    done
 
     # Managing configmaps with kubectl is not idempotent.
     # If there's an error on create, we'll assume it's already there,
