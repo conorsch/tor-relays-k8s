@@ -16,6 +16,8 @@ do
     cm="tor-relay-config-${n}"
 
     # Fetch external IP via API lookup.
+    # The external IP won't be immediately available if the LBs
+    # were just created, so poll for a defined value for external IP.
     external_ip=""
     while test -z "${external_ip}"
     do
