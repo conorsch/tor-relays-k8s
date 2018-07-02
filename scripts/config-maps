@@ -13,5 +13,5 @@ do
     external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
 
     cm="tor-relay-config-${n}"
-    kubectl create configmap "$cm" --from-file=<(echo RELAY_ADDRESS=$external_ip)
+    kubectl create configmap "$cm" --from-literal="RELAY_ADDRESS=${external_ip}"
 done
