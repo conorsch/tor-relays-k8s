@@ -8,20 +8,26 @@ metadata:
 spec:
   containers:
   - name: tor-relay-1
-    image: us.gcr.io/xenon-petal-208819/tor-relay:latest
+    image: quay.io/conorsch/tor-relay:latest
     env:
     - name: RELAY_ADDRESS
-      value: "35.233.204.112"
+      valueFrom:
+        configMapKeyRef:
+          name: tor-relay-config-1
+          key: RELAY_ADDRESS
     - name: RELAY_PORT
       value: "9001"
     - name: RELAY_NICKNAME
       value: Emolument
 
   - name: tor-relay-2
-    image: us.gcr.io/xenon-petal-208819/tor-relay:latest
+    image: quay.io/conorsch/tor-relay:latest
     env:
     - name: RELAY_ADDRESS
-      value: "35.233.204.112"
+      valueFrom:
+        configMapKeyRef:
+          name: tor-relay-config-1
+          key: RELAY_ADDRESS
     - name: RELAY_PORT
       value: "9002"
     - name: RELAY_NICKNAME

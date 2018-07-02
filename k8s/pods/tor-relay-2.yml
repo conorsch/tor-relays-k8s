@@ -8,20 +8,26 @@ metadata:
 spec:
   containers:
   - name: tor-relay-3
-    image: us.gcr.io/xenon-petal-208819/tor-relay:latest
+    image: quay.io/conorsch/tor-relay:latest
     env:
     - name: RELAY_ADDRESS
-      value: "104.199.126.85"
+      valueFrom:
+        configMapKeyRef:
+          name: tor-relay-config-2
+          key: RELAY_ADDRESS
     - name: RELAY_PORT
       value: "9003"
     - name: RELAY_NICKNAME
       value: Eritrea
 
   - name: tor-relay-4
-    image: us.gcr.io/xenon-petal-208819/tor-relay:latest
+    image: quay.io/conorsch/tor-relay:latest
     env:
     - name: RELAY_ADDRESS
-      value: "104.199.126.85"
+      valueFrom:
+        configMapKeyRef:
+          name: tor-relay-config-2
+          key: RELAY_ADDRESS
     - name: RELAY_PORT
       value: "9004"
     - name: RELAY_NICKNAME
