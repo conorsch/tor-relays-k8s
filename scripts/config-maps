@@ -1,17 +1,28 @@
 #!/bin/bash
+# Helper script to provision a Kubernetes ConfigMap
+# from dynamic values, specifically the external IPs
+# of the loadbalancers.
 set -e
 set -u
 set -o pipefail
 
-
-
+# We have a total of two pods to operate on.
+# We'll generate config maps of the external IPs
+# for each pod, so they can reuse the value.
 for n in 1 2
 do
-
+    # Define target service and configmap names.
     svc="tor-relay-lb-${n}"
     cm="tor-relay-config-${n}"
+
+    # Fetch external IP via API lookup.
     external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
 
-    cm="tor-relay-config-${n}"
-    kubectl create configmap "$cm" --from-literal="RELAY_ADDRESS=${external_ip}"
+    # Managing configmaps with kubectl is not idempotent.
+    # If there's an error on create, we'll assume it's already there,
+    # and update it in-place.
+    kubectl create configmap "$cm" --from-literal="RELAY_ADDRESS=${external_ip}" || \
+        kubectl create configmap "$cm" --from-literal="RELAY_ADDRESS=${external_ip}" \
+        --dry-run --output yaml \
+        | kubectl replace -f -
 done
