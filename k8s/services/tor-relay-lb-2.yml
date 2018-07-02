@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tor-relay-lb-2
+spec:
+  ports:
+  - name: tor-relay-3
+    port: 9003
+    targetPort: 9003
+  - name: tor-relay-4
+    port: 9004
+    targetPort: 9004
+  selector:
+    tor_relay: "2"
+  type: LoadBalancer
+  externalTrafficPolicy: Local
