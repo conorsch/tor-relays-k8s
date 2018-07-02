@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+set -u
+set -o pipefail
+
+
+
+for n in 1 2
+do
+
+    svc="tor-relay-lb-${n}"
+    cm="tor-relay-config-${n}"
+    external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
+
+    cm="tor-relay-config-${n}"
+    kubectl create configmap "$cm" --from-file=<(echo RELAY_ADDRESS=$external_ip)
+done
