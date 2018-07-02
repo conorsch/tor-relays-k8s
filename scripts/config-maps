@@ -19,9 +19,12 @@ do
     external_ip=""
     while test -z "${external_ip}"
     do
-        echo "Waiting for external IP for load balancer..."
-        sleep 30
         external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
+        if [[ -z "${external_ip}" ]]
+        then
+            echo "Waiting for external IP for load balancer..."
+            sleep 30
+        fi
     done
 
     # Managing configmaps with kubectl is not idempotent.
