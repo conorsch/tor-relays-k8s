@@ -14,3 +14,9 @@ k8s:
 
 .PHONY: all
 all: container k8s
+
+.PHONY: destroy
+destroy:
+	kubectl delete -f k8s -R --ignore-not-found
+	kubectl delete configmap tor-relay-config-1 --ignore-not-found
+	kubectl delete configmap tor-relay-config-2 --ignore-not-found
