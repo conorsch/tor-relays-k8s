@@ -20,7 +20,7 @@ do
     while test -z "${external_ip}"
     do
         echo "Waiting for external IP for load balancer..."
-        sleep 5
+        sleep 30
         external_ip="$(kubectl get service "$svc" --output jsonpath='{@.status.loadBalancer.ingress[0].ip}')"
     done
 
